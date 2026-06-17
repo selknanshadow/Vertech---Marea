@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAREA — Monitor Satelital de Economía Azul</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <img src="logo.png" alt="Vertech TdF" class="header-logo">
+      <div class="header-brand">
+        <span class="brand-name">MAREA</span>
+        <span class="brand-sub">Monitor Satelital · Economía Azul / Blue Economy Monitor</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <img src="bandera.png" alt="Tierra del Fuego" class="header-bandera">
+      <span class="header-badge">Innovatón Space 2025</span>
+      <span class="header-live"><span class="live-dot"></span>En vivo / Live</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <button class="nav-btn active" data-tab="dashboard">
+    <i class="ti ti-dashboard" aria-hidden="true"></i>
+    <span>Panel / Dashboard</span>
+  </button>
+  <button class="nav-btn" data-tab="analizar">
+    <i class="ti ti-satellite" aria-hidden="true"></i>
+    <span>Analizar imagen / Analyze</span>
+  </button>
+  <button class="nav-btn" data-tab="alertas">
+    <i class="ti ti-bell" aria-hidden="true"></i>
+    <span>Alertas / Alerts</span>
+  </button>
+  <button class="nav-btn" data-tab="informe">
+    <i class="ti ti-file-text" aria-hidden="true"></i>
+    <span>Informe / Report</span>
+  </button>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- ══ DASHBOARD ══ -->
+  <section id="tab-dashboard" class="tab active">
+
+    <div class="section-header">
+      <h2>Estado general del mar / Ocean Status</h2>
+      <p>Indicadores oceanográficos en tiempo real derivados de imágenes satelitales · Real-time oceanographic indicators from satellite imagery</p>
+    </div>
+
+    <!-- Indicadores principales -->
+    <div class="indicators-grid">
+
+      <div class="indicator-card">
+        <div class="indicator-icon" style="background:#e6f1fb;"><i class="ti ti-thermometer" style="color:#185fa5;" aria-hidden="true"></i></div>
+        <div class="indicator-body">
+          <div class="indicator-label">Temperatura Superficial / Sea Surface Temperature</div>
+          <div class="indicator-value" id="ind-temp">— °C</div>
+          <div class="indicator-ref">Normal: 8–12°C (zona austral) · Subí una imagen para medir</div>
+          <div class="indicator-status" id="st-temp"></div>
+        </div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-icon" style="background:#e1f5ee;"><i class="ti ti-leaf" style="color:#0f6e56;" aria-hidden="true"></i></div>
+        <div class="indicator-body">
+          <div class="indicator-label">Clorofila-a / Chlorophyll-a <span class="indicator-help" onclick="showHelp('clorofila')">?</span></div>
+          <div class="indicator-value" id="ind-cloro">— mg/m³</div>
+          <div class="indicator-ref">Alta productividad: &gt;2 mg/m³ · Baja: &lt;0.5 mg/m³</div>
+          <div class="indicator-status" id="st-cloro"></div>
+        </div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-icon" style="background:#faeeda;"><i class="ti ti-eye" style="color:#854f0b;" aria-hidden="true"></i></div>
+        <div class="indicator-body">
+          <div class="indicator-label">Turbidez / Turbidity <span class="indicator-help" onclick="showHelp('turbidez')">?</span></div>
+          <div class="indicator-value" id="ind-turb">— NTU</div>
+          <div class="indicator-ref">Óptimo: &lt;5 NTU · Elevado: &gt;20 NTU</div>
+          <div class="indicator-status" id="st-turb"></div>
+        </div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-icon" style="background:#fcebeb;"><i class="ti ti-ship" style="color:#a32d2d;" aria-hidden="true"></i></div>
+        <div class="indicator-body">
+          <div class="indicator-label">Embarcaciones detectadas / Vessels Detected</div>
+          <div class="indicator-value" id="ind-barcos">—</div>
+          <div class="indicator-ref">Vía Sentinel-1 SAR · En zona analizada</div>
+          <div class="indicator-status" id="st-barcos"></div>
+        </div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-icon" style="background:#f3e8ff;"><i class="ti ti-waves" style="color:#6b3fa0;" aria-hidden="true"></i></div>
+        <div class="indicator-body">
+          <div class="indicator-label">Productividad marina / Marine Productivity <span class="indicator-help" onclick="showHelp('productividad')">?</span></div>
+          <div class="indicator-value" id="ind-prod">—</div>
+          <div class="indicator-ref">Alta / Media / Baja según clorofila y temperatura</div>
+          <div class="indicator-status" id="st-prod"></div>
+        </div>
+      </div>
+
+      <div class="indicator-card">
+        <div class="indicator-icon" style="background:#e1f5ee;"><i class="ti ti-alert-triangle" style="color:#0f6e56;" aria-hidden="true"></i></div>
+        <div class="indicator-body">
+          <div class="indicator-label">Nivel de alerta / Alert Level</div>
+          <div class="indicator-value" id="ind-alerta">—</div>
+          <div class="indicator-ref">Verde / Amarillo / Rojo según anomalías detectadas</div>
+          <div class="indicator-status" id="st-alerta"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Glosario de indicadores -->
+    <div id="help-box" class="help-box" style="display:none;">
+      <div class="help-header">
+        <span id="help-title"></span>
+        <button onclick="document.getElementById('help-box').style.display='none'" class="help-close">✕</button>
+      </div>
+      <div id="help-text" class="help-text"></div>
+    </div>
+
+    <!-- Zona analizada -->
+    <div class="zone-card" id="zona-card">
+      <div class="zone-empty">
+        <i class="ti ti-satellite" aria-hidden="true"></i>
+        <div>
+          <strong>No hay zona analizada todavía / No zone analyzed yet</strong>
+          <p>Usá la pestaña "Analizar imagen" para cargar una imagen satelital · Use the "Analyze" tab to upload a satellite image</p>
+        </div>
+        <button class="btn-primary" onclick="goTab('analizar')">
+          <i class="ti ti-upload" aria-hidden="true"></i> Cargar imagen / Upload image
+        </button>
+      </div>
+    </div>
+
+    <!-- Última zona analizada (se muestra después del análisis) -->
+    <div id="ultima-zona" style="display:none;">
+      <div class="section-header" style="margin-top:1.5rem;">
+        <h3>Último análisis / Last analysis</h3>
+      </div>
+      <div class="result-zona" id="result-zona-content"></div>
+    </div>
+
+  </section>
+
+  <!-- ══ ANALIZAR IMAGEN ══ -->
+  <section id="tab-analizar" class="tab">
+
+    <div class="section-header">
+      <h2>Analizar imagen satelital / Analyze satellite image</h2>
+      <p>Subí una imagen de cualquier zona del mundo. La IA detectará indicadores oceanográficos y generará alertas · Upload an image from anywhere in the world. AI will detect oceanographic indicators and generate alerts.</p>
+    </div>
+
+    <!-- Formulario de contexto -->
+    <div class="form-card">
+      <div class="form-card-title">
+        <i class="ti ti-map-pin" aria-hidden="true"></i>
+        Contexto de la imagen / Image context
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">Nombre del lugar / Location name *</label>
+          <input type="text" id="ctx-lugar" class="form-input" placeholder="Ej: Mar del Norte, Golfo Pérsico, Costa de Noruega...">
+        </div>
+        <div class="form-field">
+          <label class="form-label">País o región / Country or region</label>
+          <input type="text" id="ctx-pais" class="form-input" placeholder="Ej: Argentina, Noruega, Japón...">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Fecha de la imagen / Image date</label>
+          <input type="date" id="ctx-fecha" class="form-input">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Fuente satelital / Satellite source</label>
+          <select id="ctx-fuente" class="form-input">
+            <option value="Sentinel-3 OLCI">Sentinel-3 OLCI (clorofila / chlorophyll)</option>
+            <option value="Sentinel-1 SAR">Sentinel-1 SAR (embarcaciones / vessels)</option>
+            <option value="MODIS">MODIS (temperatura / temperature)</option>
+            <option value="Sentinel-2">Sentinel-2 (costa / coastline)</option>
+            <option value="Copernicus Marine">Copernicus Marine Service</option>
+            <option value="Google Earth">Google Earth / captura / screenshot</option>
+            <option value="Desconocida">Desconocida / Unknown</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload -->
+    <div class="upload-area" id="drop-zone">
+      <input type="file" id="file-input" accept="image/*">
+      <i class="ti ti-cloud-upload upload-icon" aria-hidden="true"></i>
+      <div class="upload-title">Arrastrá o hacé clic · Drag or click</div>
+      <div class="upload-sub">PNG · JPEG · GeoTIFF exportado · Captura de Copernicus Hub · Google Earth</div>
+      <div class="fmt-row">
+        <span class="fmt">GeoTIFF</span>
+        <span class="fmt">PNG</span>
+        <span class="fmt">JPEG</span>
+        <span class="fmt">Copernicus Hub</span>
+        <span class="fmt">Google Earth</span>
+      </div>
+    </div>
+
+    <!-- Demo -->
+    <div class="demo-row">
+      <span class="demo-label">O probá con imágenes de demo / Or try demo images:</span>
+      <button class="btn-demo" data-demo="productivo"><i class="ti ti-plant" aria-hidden="true"></i> Mar productivo / Productive sea</button>
+      <button class="btn-demo" data-demo="anomalia"><i class="ti ti-alert-circle" aria-hidden="true"></i> Anomalía térmica / Thermal anomaly</button>
+      <button class="btn-demo" data-demo="pesca"><i class="ti ti-fish" aria-hidden="true"></i> Zona de pesca / Fishing zone</button>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-wrap" id="preview-wrap">
+      <img id="preview-img" src="" alt="Imagen satelital cargada">
+      <span class="preview-tag" id="preview-tag">Demo</span>
+    </div>
+
+    <!-- Botón analizar -->
+    <button class="btn-analyze" id="analyze-btn" disabled>
+      <i class="ti ti-brain" aria-hidden="true"></i>
+      Analizar con IA · Analyze with AI
+    </button>
+    <p class="analyze-note">⚡ Primera consulta puede tardar ~50 seg si el servidor estuvo inactivo · First request may take ~50 sec if server was idle</p>
+
+    <div class="ia-status" id="st-img"></div>
+
+    <!-- Resultados -->
+    <div class="results-wrap" id="results-wrap" style="display:none;">
+
+      <div class="results-header">
+        <i class="ti ti-check-circle" style="color:#1d9e75;" aria-hidden="true"></i>
+        <span id="results-zona-nombre">Análisis completado / Analysis complete</span>
+      </div>
+
+      <!-- Indicadores del resultado -->
+      <div class="result-indicators" id="result-indicators"></div>
+
+      <!-- Diagnóstico -->
+      <div class="result-section">
+        <div class="result-section-title">
+          <i class="ti ti-stethoscope" aria-hidden="true"></i>
+          Diagnóstico oceanográfico / Oceanographic diagnosis
+        </div>
+        <div class="result-text" id="result-diagnostico"></div>
+      </div>
+
+      <!-- Alertas generadas -->
+      <div class="result-section">
+        <div class="result-section-title">
+          <i class="ti ti-bell" aria-hidden="true"></i>
+          Alertas generadas / Generated alerts
+        </div>
+        <div id="result-alertas"></div>
+      </div>
+
+      <!-- Acciones recomendadas -->
+      <div class="result-section">
+        <div class="result-section-title">
+          <i class="ti ti-list-check" aria-hidden="true"></i>
+          Acciones recomendadas / Recommended actions
+        </div>
+        <div id="result-acciones"></div>
+      </div>
+
+      <div class="opcion-b-note">
+        <i class="ti ti-flask" aria-hidden="true"></i>
+        <div>
+          <strong>Opción A (actual):</strong> La IA estima indicadores visualmente desde la imagen. <strong>Opción B (roadmap):</strong> Pipeline rasterio + GDAL calculará clorofila, SST y turbidez pixel a pixel desde bandas espectrales Sentinel-3 originales.
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ══ ALERTAS ══ -->
+  <section id="tab-alertas" class="tab">
+
+    <div class="section-header">
+      <h2>Centro de alertas / Alert Center</h2>
+      <p>Alertas generadas por análisis satelital con IA · Alerts generated by AI satellite analysis</p>
+    </div>
+
+    <div id="alertas-lista">
+      <div class="empty-state">
+        <i class="ti ti-bell-off" aria-hidden="true"></i>
+        <p>No hay alertas todavía / No alerts yet</p>
+        <p>Analizá una imagen para generar alertas · Analyze an image to generate alerts</p>
+        <button class="btn-primary" onclick="goTab('analizar')">
+          <i class="ti ti-satellite" aria-hidden="true"></i> Ir al analizador / Go to analyzer
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══ INFORME ══ -->
+  <section id="tab-informe" class="tab">
+
+    <div class="section-header">
+      <h2>Informe ejecutivo / Executive Report</h2>
+      <p>Resumen del último análisis listo para decisores · Last analysis summary ready for decision makers</p>
+    </div>
+
+    <div id="informe-contenido">
+      <div class="empty-state">
+        <i class="ti ti-file-off" aria-hidden="true"></i>
+        <p>No hay informe disponible / No report available</p>
+        <p>Analizá una imagen para generar el informe · Analyze an image to generate the report</p>
+        <button class="btn-primary" onclick="goTab('analizar')">
+          <i class="ti ti-satellite" aria-hidden="true"></i> Ir al analizador / Go to analyzer
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span>MAREA · Vertech TdF · Tierra del Fuego, Argentina</span>
+    <span>Powered by Sentinel · TROPOMI · Claude Vision · Innovatón Space 2025</span>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
