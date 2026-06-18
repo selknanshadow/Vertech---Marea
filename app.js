@@ -281,7 +281,23 @@ Respondé SOLO en JSON puro sin backticks ni texto adicional:
 }`;
 
   try {
-    const r = await fetch(`${CONFIG.BACKEND_URL}/analizar-imagen`, {
+    const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutos
+
+const r = await fetch(`${CONFIG.BACKEND_URL}/analizar-imagen`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  signal: controller.signal,
+  body: JSON.stringify({
+    imagen_base64: imagenActual.split(',')[1],
+    tipo: 'mar',
+    lugar: zonaCompleta,
+    fecha: fecha,
+    fuente: fuente,
+    prompt_custom: prompt,
+  }),
+});
+clearTimeout(timeoutId);
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
